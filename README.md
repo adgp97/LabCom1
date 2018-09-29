@@ -1,2 +1,2 @@
 # LabCom1
-Prácticas del laboratorio de EC2422 Comunicaciones I cuando es dictado por el profesor Luis Loreto
+Prácticas del laboratorio del curso EC2422 Comunicaciones I USB, dictado por el profesor Luis Loreto
