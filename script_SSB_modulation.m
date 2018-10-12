@@ -67,8 +67,8 @@ ylabel('Amplitud (V)');
 %Gráfica de la transformada de Fourier de las señales moduladas
 l = length(t);
 f = fs*(-l/2:l/2-1)/l;      %Cálculo del vector de frecuencias
-m_ussb_fft = abs(fftshift(fft(m_ussb)))./l;%Transformada de la señal USSB
-m_lssb_fft = abs(fftshift(fft(m_lssb)))./l;%Transformada de la señal LSSB
+m_ussb_fft = abs(fft(m_ussb))./l;%Transformada de la señal USSB
+m_lssb_fft = abs(fft(m_lssb))./l;%Transformada de la señal LSSB
 
 subplot(2,2,3);             %Gráfico de la transformada de la señal 
 plot(f,m_lssb_fft);         %modulada LSSB
@@ -84,7 +84,7 @@ ylabel('Amplitud');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                            DEMODULACION                                %
+%                            DEMODULACIÓN                                %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %CREACION DEL OSCILADOR LOCAL
@@ -92,32 +92,62 @@ A_lo = 1;                   %Amplitud del oscilador local
 lo = A_lo*cos(2*pi*fc*t);   %Señal del oscilador local
 
 %CREACION DEL FILTRO PASABAJOS
-W = 20;                     %Ancho de banda del mensaje
+W = 10;                     %Ancho de banda del mensaje
 wn = W/(fs/2);              %Frecuencia de corte normalizada: frecuencia
                             %de corte entre la mitad de la frecuencia de 
                             %muestreo
-[num,den] = butter(4,wn,'low');%Obtencion del numerador y denominador de la 
-                               %funcion de transferencia del filtro de tipo
+[num,den] = butter(4,wn,'low');%Obtención del numerador y denominador de la 
+                               %función de transferencia del filtro de tipo
                                %butterworth
 H_pos = freqz(num,den,floor(length(m)/2));%Filtro para f>0
 H_neg = fliplr(H_pos');                   %Filtro para f<0
 H = [H_neg H_pos'];                       %Filtro para toda f
 
+
 figure(3)
-plot(f,abs(H))                %Grafica del filtro junto con
-                              %la transformada de las senales
-                              %moduladas
+plot(f,abs(H),'r');           %Gráfica del filtro 
 
-%DEMODULACION
-y_ussb = m_ussb.*lo;         %Multiplicacion de la señal USSB por el 
+%DEMODULACIÓN
+y_ussb = m_ussb.*lo;         %Multiplicación de la señal USSB por el 
                              %oscilador local
-y_lssb = m_lssb.*lo;         %Multiplicacion de la señal LSSB por el 
+y_lssb = m_lssb.*lo;         %Multiplicación de la señal LSSB por el 
                              %oscilador local
+                                                          
 hold on
-plot(f,abs(fftshift(fft(y_ussb)))/l) 
+plot(f,abs(fftshift(fft(y_ussb)))/l,'g');%Gráfica del espectro de la señal
+plot(f,abs(fftshift(fft(y_lssb)))/l,'b');%Gráfica del espectro de la señal
+legend('Filtro','USSB','LSSB');
+xlim([-100 100]);
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud');
+title('Efecto del filtro pasabajos');
 
-yd_ussb = filter(num,den,y_ussb);%Aplicacion del filtro a la USSB
-yd_lssb = filter(num,den,y_lssb);%Aplicacion del filtro a la LSSB
+yd_ussb = filter(num,den,y_ussb);%Aplicación del filtro a la USSB
+yd_lssb = filter(num,den,y_lssb);%Aplicación del filtro a la LSSB
+
+%Gráficas de los resultados
 figure(4)
-plot(t,yd_ussb)
 
+subplot(2,2,1);
+plot(t,yd_ussb);
+title('Señal demodulada (USSB)');
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+
+subplot(2,2,2);
+plot(t,yd_lssb);
+title('Señal demodulada (LSSB)');
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+
+subplot(2,2,3);
+plot(f,abs(fftshift(yd_ussb))/l);
+title('Transformada de Fourier de la señal');
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud');
+
+subplot(2,2,4);
+plot(f,abs(fftshift(yd_lssb))/l);
+title('Transformada de Fourier de la señal');
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud');
