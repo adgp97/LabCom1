@@ -70,7 +70,7 @@ grid on
 l = length(t);
 f = fs*(-l/2:l/2-1)/l;      %Cálculo del vector de frecuencias
 m_ussb_fft = abs(fftshift(fft(m_ussb)))./l;%Transformada de la señal USSB
-m_lssb_fft =abs(fftshift(fft(m_lssb)))./l;%Transformada de la señal LSSB
+m_lssb_fft = abs(fftshift(fft(m_lssb)))./l;%Transformada de la señal LSSB
 
 subplot(2,2,3);             %Gráfico de la transformada de la señal 
 plot(f,m_lssb_fft);         %modulada LSSB
@@ -96,7 +96,7 @@ A_lo = 1;                   %Amplitud del oscilador local
 lo = A_lo*cos(2*pi*fc*t);   %Señal del oscilador local
 
 %CREACION DEL FILTRO PASABAJOS
-W = 20;                     %Ancho de banda del mensaje
+W = 10;                     %Ancho de banda del mensaje
 wn = W/(fs/2);              %Frecuencia de corte normalizada: frecuencia
                             %de corte entre la mitad de la frecuencia de 
                             %muestreo
@@ -151,7 +151,7 @@ subplot(2,2,3);
 plot(f,abs(fftshift(fft(yd_ussb)))./l);
 title('Transformada de Fourier de la señal');
 xlabel('Frecuencia (Hz)');
-ylabel('Amplitud');
+ylabel('Amplitud (V)');
 xlim([-20,20]);
 grid on
 
@@ -159,6 +159,35 @@ subplot(2,2,4);
 plot(f,abs(fftshift(fft((yd_lssb))))./l);
 title('Transformada de Fourier de la señal');
 xlabel('Frecuencia (Hz)');
-ylabel('Amplitud');
+ylabel('Amplitud (V)');
 xlim([-20,20]);
 grid on
+
+%%%%%% GAUSSIAN NOISE 
+noise = wgn(1,length(t), -10); 
+figure(9); 
+plot(t,noise); 
+
+%%%%% NOISE MODULATION 
+
+m_ussb_n = noise+m_ussb; 
+m_lssb_n = noise+m_lssb; 
+
+figure(10); 
+subplot(2,1,1); plot(t,m_ussb_n); 
+subplot(2,1,2); plot(t,m_lssb_n); 
+
+%%%%% DEMODULATION 
+
+m_ussb_d = (noise+m_ussb).*cos(2*pi*fc*t); 
+m_lssb_d = (noise+m_lssb).*cos(2*pi*fc*t); 
+
+%%%%% FILTER 
+
+m_ussb_f = filter(num,den,m_ussb_d); 
+m_lssb_f = filter(num,den,m_lssb_d); 
+
+figure(11); 
+subplot(2,1,1); plot(t,m_ussb_f); 
+subplot(2,1,2); plot(t,m_lssb_f); 
+
