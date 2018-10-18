@@ -41,7 +41,7 @@ grid on
 %                           MODULACION SSB                               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %CREACION DE LA SEÑAL PORTADORA
-Ac = 1;                     %Amplitud de la señal portadora
+Ac = 5;                     %Amplitud de la señal portadora
 Ka = 1;                     %Sensibilidad del transmisor
 fc = 500;                   %Frecuencia de la portadora
 c1 = Ac/2*cos(2*pi*fc*t);   %Portadora coseno
@@ -49,8 +49,8 @@ c2 = Ac/2*sin(2*pi*fc*t);   %Portadora seno (desfase de pi/2)
 
 %MODULACION
 mh = imag(hilbert(m));      %Transformada de Hilbert del mensaje
-m_ussb = Ka*(m.*c1 - mh.*c2);%Mensaje modulado con banda lateral superior
-m_lssb = Ka*(m.*c1 + mh.*c2);%Mensaje modulado con banda lateral inferior
+m_ussb = Ka*(c1.*m - c2.*mh);%Mensaje modulado con banda lateral superior
+m_lssb = Ka*(c1.*m + c2.*mh);%Mensaje modulado con banda lateral inferior
 
 figure(2)
 subplot(2,2,1);             %Gráfico de la señal LSSB
@@ -58,29 +58,33 @@ plot(t,m_lssb);
 title('Señal modulada LSSB');
 xlabel('Time (s)');
 ylabel('Amplitud (V)');
+grid on
 subplot(2,2,2);             %Gráfico de la señal USSB
 plot(t,m_ussb);
 title('Señal modulada USSB');
 xlabel('Time (s)');
 ylabel('Amplitud (V)');
+grid on
 
 %Gráfica de la transformada de Fourier de las señales moduladas
 l = length(t);
 f = fs*(-l/2:l/2-1)/l;      %Cálculo del vector de frecuencias
-m_ussb_fft = abs(fft(m_ussb))./l;%Transformada de la señal USSB
-m_lssb_fft = abs(fft(m_lssb))./l;%Transformada de la señal LSSB
+m_ussb_fft = abs(fftshift(fft(m_ussb)))./l;%Transformada de la señal USSB
+m_lssb_fft =abs(fftshift(fft(m_lssb)))./l;%Transformada de la señal LSSB
 
 subplot(2,2,3);             %Gráfico de la transformada de la señal 
 plot(f,m_lssb_fft);         %modulada LSSB
 title('Transformada de Fourier de la señal modulada LSSB');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
+grid on
 
 subplot(2,2,4);             %Gráfico de la transformada de la señal
 plot(f,m_ussb_fft);         %modulada LSSB
 title('Transformada de Fourier de la señal modulada USSB');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
+grid on
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,7 +96,7 @@ A_lo = 1;                   %Amplitud del oscilador local
 lo = A_lo*cos(2*pi*fc*t);   %Señal del oscilador local
 
 %CREACION DEL FILTRO PASABAJOS
-W = 10;                     %Ancho de banda del mensaje
+W = 20;                     %Ancho de banda del mensaje
 wn = W/(fs/2);              %Frecuencia de corte normalizada: frecuencia
                             %de corte entre la mitad de la frecuencia de 
                             %muestreo
@@ -121,6 +125,7 @@ xlim([-100 100]);
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
 title('Efecto del filtro pasabajos');
+grid on
 
 yd_ussb = filter(num,den,y_ussb);%Aplicación del filtro a la USSB
 yd_lssb = filter(num,den,y_lssb);%Aplicación del filtro a la LSSB
@@ -133,21 +138,27 @@ plot(t,yd_ussb);
 title('Señal demodulada (USSB)');
 xlabel('Tiempo (s)');
 ylabel('Amplitud (V)');
+grid on
 
 subplot(2,2,2);
 plot(t,yd_lssb);
 title('Señal demodulada (LSSB)');
 xlabel('Tiempo (s)');
 ylabel('Amplitud (V)');
+grid on
 
 subplot(2,2,3);
-plot(f,abs(fftshift(yd_ussb))/l);
+plot(f,abs(fftshift(fft(yd_ussb)))./l);
 title('Transformada de Fourier de la señal');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
+xlim([-20,20]);
+grid on
 
 subplot(2,2,4);
-plot(f,abs(fftshift(yd_lssb))/l);
+plot(f,abs(fftshift(fft((yd_lssb))))./l);
 title('Transformada de Fourier de la señal');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
+xlim([-20,20]);
+grid on
