@@ -26,7 +26,7 @@ grid on
 
 %Gráfica de la transformada de Fourier del mensaje
 l = length(t);
-f = fs*(-l/2:l/2-1)/l;%Cálculo del vector de frecuencias
+f = 16*fs*(-l/2:l/2-1)/l;%Cálculo del vector de frecuencias
 m_fft = abs(fftshift(fft(m)))./l;%Transformada del mensaje
 
 subplot(2,1,2);             %Gráfica de la transformada del mensaje
@@ -34,7 +34,7 @@ plot(f,m_fft);
 title('Transformada de Fourier de m(t)');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
-xlim([-20,20]);
+%xlim([-20,20]);
 grid on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -68,19 +68,19 @@ grid on
 
 %Gráfica de la transformada de Fourier de las señales moduladas
 l = length(t);
-f = fs*(-l/2:l/2-1)/l;      %Cálculo del vector de frecuencias
-m_ussb_fft = abs(fftshift(fft(m_ussb)))./l;%Transformada de la señal USSB
-m_lssb_fft = abs(fftshift(fft(m_lssb)))./l;%Transformada de la señal LSSB
+f = 16*fs*(-l/2:l/2-1)./l;      %Cálculo del vector de frecuencias
+m_ussb_fft = fftshift(fft(m_ussb));%Transformada de la señal USSB
+m_lssb_fft = fftshift(fft(m_lssb));%Transformada de la señal LSSB
 
 subplot(2,2,3);             %Gráfico de la transformada de la señal 
-plot(f,m_lssb_fft);         %modulada LSSB
+plot(f,abs(m_lssb_fft));         %modulada LSSB
 title('Transformada de Fourier de la señal modulada LSSB');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
 grid on
 
 subplot(2,2,4);             %Gráfico de la transformada de la señal
-plot(f,m_ussb_fft);         %modulada LSSB
+plot(f,abs(m_ussb_fft));         %modulada USSB
 title('Transformada de Fourier de la señal modulada USSB');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
@@ -121,7 +121,7 @@ hold on
 plot(f,abs(fftshift(fft(y_ussb)))/l,'g');%Gráfica del espectro de la señal
 plot(f,abs(fftshift(fft(y_lssb)))/l,'b');%Gráfica del espectro de la señal
 legend('Filtro','USSB','LSSB');
-xlim([-100 100]);
+%xlim([-100 100]);
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud');
 title('Efecto del filtro pasabajos');
@@ -152,7 +152,7 @@ plot(f,abs(fftshift(fft(yd_ussb)))./l);
 title('Transformada de Fourier de la señal');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud (V)');
-xlim([-20,20]);
+%xlim([-20,20]);
 grid on
 
 subplot(2,2,4);
@@ -160,34 +160,124 @@ plot(f,abs(fftshift(fft((yd_lssb))))./l);
 title('Transformada de Fourier de la señal');
 xlabel('Frecuencia (Hz)');
 ylabel('Amplitud (V)');
-xlim([-20,20]);
+%xlim([-20,20]);
 grid on
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                               RUIDO                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%% GAUSSIAN NOISE 
 noise = wgn(1,length(t), -10); 
-figure(9); 
+figure(9);
+subplot(2,1,1)
 plot(t,noise); 
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+title('Ruido introducido en el proceso de modulación');
+grid on
+
+subplot(2,1,2)
+histogram(noise);
+%xlabel('Tiempo (s)');
+%ylabel('Amplitud (V)');
+title('Histograma del ruido gaussiano');
+grid on
+
 
 %%%%% NOISE MODULATION 
 
-m_ussb_n = noise+m_ussb; 
-m_lssb_n = noise+m_lssb; 
+m_ussb_n = noise + m_ussb; 
+m_lssb_n = noise + m_lssb; 
 
 figure(10); 
-subplot(2,1,1); plot(t,m_ussb_n); 
-subplot(2,1,2); plot(t,m_lssb_n); 
+subplot(2,2,2); 
+plot(t,m_ussb_n);
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+title('Señal con modulación USSB con ruido');
+grid on
+
+subplot(2,2,1); 
+plot(t,m_lssb_n);
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+title('Señal con modulación LSSB con ruido');
+grid on
+
+m_ussb_n_fft = fftshift(fft(m_ussb_n));%Transformada de la señal USSB
+m_lssb_n_fft = fftshift(fft(m_lssb_n));%Transformada de la señal LSSB
+
+subplot(2,2,3);             %Gráfico de la transformada de la señal 
+plot(f,abs(m_lssb_n_fft));         %modulada LSSB
+title('Transformada de Fourier de la señal modulada LSSB con ruido');
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud');
+grid on
+
+subplot(2,2,4);             %Gráfico de la transformada de la señal
+plot(f,abs(m_ussb_n_fft));         %modulada USSB
+title('Transformada de Fourier de la señal modulada USSB con ruido');
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud');
+grid on
+
+
+
 
 %%%%% DEMODULATION 
 
-m_ussb_d = (noise+m_ussb).*cos(2*pi*fc*t); 
-m_lssb_d = (noise+m_lssb).*cos(2*pi*fc*t); 
+m_ussb_n_d = (noise + m_ussb).*cos(2*pi*fc*t); 
+m_lssb_n_d = (noise + m_lssb).*cos(2*pi*fc*t); 
+
+figure(11)
+plot(f,abs(H),'r');           %Gráfica del filtro 
+
+hold on
+plot(f,abs(fftshift(fft(m_ussb_n_d)))/l,'g');%Gráfica del espectro de la señal
+plot(f,abs(fftshift(fft(m_lssb_n_d)))/l,'b');%Gráfica del espectro de la señal
+legend('Filtro','USSB','LSSB');
+%xlim([-100 100]);
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud');
+title('Efecto del filtro pasabajos sobre las señales moduladas con ruido');
+grid on
 
 %%%%% FILTER 
 
-m_ussb_f = filter(num,den,m_ussb_d); 
-m_lssb_f = filter(num,den,m_lssb_d); 
+m_ussb_f = filter(num,den,m_ussb_n_d); 
+m_lssb_f = filter(num,den,m_lssb_n_d); 
 
-figure(11); 
-subplot(2,1,1); plot(t,m_ussb_f); 
-subplot(2,1,2); plot(t,m_lssb_f); 
+%Gráficas de los resultados
+figure(12)
+
+subplot(2,2,1);
+plot(t,m_ussb_f);
+title('Señal demodulada (USSB) (ruido)');
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+grid on
+
+subplot(2,2,2);
+plot(t,m_lssb_f);
+title('Señal demodulada (LSSB) (ruido)');
+xlabel('Tiempo (s)');
+ylabel('Amplitud (V)');
+grid on
+
+subplot(2,2,3);
+plot(f,abs(fftshift(fft(m_ussb_f)))./l);
+title('Transformada de Fourier de la señal');
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud (V)');
+%xlim([-20,20]);
+grid on
+
+subplot(2,2,4);
+plot(f,abs(fftshift(fft((m_lssb_f))))./l);
+title('Transformada de Fourier de la señal');
+xlabel('Frecuencia (Hz)');
+ylabel('Amplitud (V)');
+%xlim([-20,20]);
+grid on
 
