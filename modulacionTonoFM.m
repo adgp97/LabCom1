@@ -23,8 +23,7 @@ ylabel('Amplitud[V]');
 grid on
 
 %Gráficas del mensaje Tono en Frecuencia
-figure(2)
-MSG=fftplot(msg,fs/10);    %Transf Fourier y gráfica del tono
+MSG=fftplot(msg,fs);    %Transf Fourier y gráfica del tono
 title('Espectro del Tono');
 xlabel('Frecuencia[Hz]');
 ylabel('Amplitud[V]');
