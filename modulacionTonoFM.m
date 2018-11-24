@@ -18,7 +18,7 @@ figure(1)
 plot(t,msg);
 title('Mensaje Tono en el Dominio Temporal');
 xlabel('Tiempo[s]');
-xlim([0 0.005]);
+xlim([0 0.01]);
 ylabel('Amplitud[V]');
 grid on
 

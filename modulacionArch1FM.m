@@ -19,21 +19,21 @@ xlabel('Tiempo[s]');
 ylabel('Amplitud[V]');
 
 %Gráficas del mensaje Tono en Frecuencia
-MSG=fftplot(msg,fs/10);    %Transf Fourier y gráfica de arch1
+MSG=fftplot(msg,fs);    %Transf Fourier y gráfica de arch1
 title('Espectro de arch1');
 xlabel('Frecuencia[Hz]');
-xlim([-600 600]);
+%xlim([-600 600]);
 ylabel('Amplitud[V]');
 
 %%
 %Modulando mensaje usando comando fmmod
 
-B=1000; %Ancho de banda del mensaje arch1.mat
+B=10000; %Ancho de banda del mensaje arch1.mat
 Delta1=1;   %Coeficiente de desviación
 deltaf1=Delta1*B;	%Desviación frecuencial
 
 XD1=fmmod(msg,fc,fs,deltaf1);
-fftplot(XD1,fs/10);
+fftplot(XD1,fs);
 title('Modulación FM de arch1 para Delta=1');
 xlabel('frecuencia [Hz]');
 ylabel('Amplitud [V]');
@@ -43,7 +43,7 @@ Delta2=5;   %Coeficiente de desviación
 deltaf2=Delta2*B;
 
 XD2=fmmod(msg,fc,fs,deltaf2); 
-fftplot(XD2,fs/10);
+fftplot(XD2,fs);
 title('Modulación FM de arch1 para Delta=5');
 xlabel('frecuencia [Hz]');
 ylabel('Amplitud [V]');
@@ -53,7 +53,7 @@ Delta3=10;  %Coeficiente de desviación
 deltaf3=Delta3*B;
 
 XD3=fmmod(msg,fc,fs,deltaf3);  
-fftplot(XD3,fs/10);
+fftplot(XD3,fs);
 title('Modulación FM de arch1 para Delta=10');
 xlabel('frecuencia [Hz]');
 ylabel('Amplitud [V]');

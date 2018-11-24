@@ -8,7 +8,7 @@ function [msg] = selmensajeFM(selector)
 
 if (selector==0)    %Selecciona el mensaje de Tono
     Am=2;           %Amplitud del mensaje
-    fm=5000;        %Frecuencia del mensaje
+    fm=500;         %Frecuencia del mensaje
     fs=110250;      %frecuencia de muestreo.
     N=825000;       %Numero de muestras
     %t =-fs/2:fs/(length(msg)-1):fs/2;

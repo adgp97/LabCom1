@@ -33,46 +33,46 @@ pause;
 %%
 %Gráficas para mensaje 1
 fftplot(y_A1,fs);
-title('Salida RF (y_A1)');
+title('Salida RF (y__A1)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_B1,fs);
-title('Salida mezcador (y_B1)');
+title('Salida mezcador (y__B1)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_C1,fs);
-title('Salida IF (y_C1)');
+title('Salida IF (y__C1)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_D1,fs);
-title('Salida detector FM (y_D1)');
+title('Salida detector FM (y__D1)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_E1,fs);
-title('Salida LPF (y_E1)');
+title('Salida LPF (y__E1)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 pause;
 
 %Gráficas para mensaje 2
 fftplot(y_A2,fs);
-title('Salida RF (y_A2)');
+title('Salida RF (y__A2)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_B2,fs);
-title('Salida mezclador (y_B2)');
+title('Salida mezclador (y__B2)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_C2,fs);
-title('Salida IF (y_C2)');
+title('Salida IF (y__C2)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_D2,fs);
-title('Salida detector FM (y_D2)');
+title('Salida detector FM (y__D2)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]');
 fftplot(y_E2,fs);
-title('Salida LPF (y_E2)');
+title('Salida LPF (y__E2)');
 xlabel('f[Hz]');
 ylabel('Amplitud[V]'); 
 %%
