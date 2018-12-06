@@ -87,26 +87,14 @@ pause;
 %Ruido Blanco Gaussiano al receptor para 5 valores de ruido aleatorio
 for i = 1:5
     ngauss=rand(1,length(t));
-    [n_A, n_B, n_C, n_D, n_E]=recSuperHeterodino(ngauss,flo1,freqdev,W_IF,WLPF,fs); %Ruido por receptor  aleatorio  
-    nSalida(i)=mean(n_D.^2);
-    nEntrada(i)=mean(n_C.^2);
-    salidamensaje1(i)=mean(y_D1.^2);
-    salidamensaje2(i)=mean(y_D2.^2);
-    Entradamensaje1(i)=mean(y_C1.^2);
-    Entradamensaje2(i)=mean(y_C2.^2);
+    [ngauss_A, ngauss_B, ngauss_C, ngauss_D, ngauss_E]=recSuperHeterodino(ngauss,flo1,freqdev,W_IF,WLPF,fs); %Ruido por receptor  aleatorio  
+    power_ngauss_out(i) = mean(ngauss_E.^2);
+    power_ngauss_in(i) = mean(ngauss.^2);
+    msg_n = ngauss + msg_RF;
+    [msg_n_A, msg_n_B, msg_n_C, msg_n_D, msg_n_E]=recSuperHeterodino(msg_n,flo1,freqdev,W_IF,WLPF,fs); %Ruido por receptor  aleatorio  
+    power_msg_n_out(i) = mean(msg_n_E.^2);
+    power_msg_n_in(i) = mean(msg_n.^2);
+    SNR_D(i) = 10*log( power_msg_n_out(i) / power_ngauss_out(i));
+    SNR_R(i) = 10*log(power_msg_n_in(i) / power_ngauss_in(i));
 end
 
-%Relación Señal Ruido para el mensaje 1
-SNR1=Entradamensaje1./nEntrada;
-SND1=salidamensaje1./nSalida;
-figure;
-plot(SNR1,SND1), xlabel('{S_{R}/N_{R}}_{1}'), ylabel('{S_{D}/N_{D}}_{1}');
-title('{S_{D}/N_{D}}_{1} vs. {S_{R}/N_{R}}_{1}');
-
-%Relación Señal Ruido para el mensaje 2
-SNR2=Entradamensaje2./nEntrada;
-SND2=salidamensaje2./nSalida;
-
-figure;
-plot(SNR2,SND2), xlabel('{S_{R}/N_{R}}_{2}'), ylabel('{S_{D}/N_{D}}_{2}');
-title('{S_{D}/N_{D}}_{2} vs. {S_{R}/N_{R}}_{2}');
