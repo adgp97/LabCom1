@@ -17,9 +17,9 @@ for i=1:2
     end
     figure,
     subplot(2,1,1);
-    plot(t,entrada), hold on;
-    plot(tout,xqu_decom,'r'), hold on;
-    plot(tout,uerror,'g');
+    plot(t,entrada,'r'), hold on;
+    plot(tout,xqu_decom,'g'), hold on;
+    plot(tout,uerror,'b');
     title(sprintf('Graficas en tiempo n = %d',n)), xlabel('t'), ylabel('y(t)');
     legend('Entrada', 'Cuantizada', 'Error');
     fs=1/(tout(2)-tout(1));
@@ -27,9 +27,9 @@ for i=1:2
     [XQ, fxq]=espectro(xqu_decom, fs);
     [ERROR, ferr]=espectro(uerror, fs);
     subplot(2,1,2);
-    plot(fe,ENTRADA), hold on;
-    plot(fxq,XQ,'r'), hold on;
-    plot(ferr,ERROR,'g');
+    plot(fe,ENTRADA,'r'), hold on;
+    plot(fxq,XQ,'g'), hold on;
+    plot(ferr,ERROR,'b');
     title(sprintf('Graficas en frecuencia n = %d',n)), xlabel('f'), ylabel('Y(f)');
     legend('Entrada', 'Cuantizada', 'Error');
     figure,

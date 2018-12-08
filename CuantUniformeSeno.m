@@ -11,37 +11,42 @@ for i=1:3
     sim('CuantUnifSin.slx');
     figure
     subplot(2,1,1)
-    plot(tout,entrada) 
+    plot(tout,entrada,'m') 
     hold on
-    plot(tout,xq,'r') 
-    %hold on
-    plot(tout,error,'g')
-    title(sprintf('Señales en el dominio temporaltiempo n = %d',n))
+    plot(tout,xq,'g') 
+    plot(tout,error,'c')
+    title(sprintf('Señales en el dominio temporal. n = %d',n))
     xlabel('Tiempo (s)'), 
     ylabel('Amplitud');
     legend('Entrada', 'Cuantizada', 'Error');
+    
+    
     fs = 1/(tout(2)-tout(1));
     [ENTRADA, fe] = espectro(entrada,fs);
     [XQ, fxq] = espectro(xq,fs);
     [ERROR, ferr] = espectro(error,fs);
-    subplot(2,1,2);
-    plot(fe,ENTRADA), hold on;
-    plot(fxq,XQ, 'r'), hold on;
-    plot(ferr,ERROR, 'g');
-    title(sprintf('Graficas en freuencia n = %d',n)), xlabel('f'), ylabel('Y(f)');
-    legend('Entrada', 'Cuantizada', 'Error');
+    subplot(2,1,2)
+    plot(fe,ENTRADA,'m')
+    hold on
+    plot(fxq,XQ, 'g')
+    plot(ferr,ERROR, 'c')
+    title(sprintf('Señales en el dominio frecuencial. n = %d',n))
+    xlabel('Frecuencia (Hz)')
+    ylabel('Magnitud')
+    legend('Entrada','Cuantizada','Error')
+    
     figure,
     hist(entrada);
     %hist(entrada/length(entrada),100);
-    title(sprintf('Histograma de la entrada n = %d', n));
+    title(sprintf('Histograma de la entrada. n = %d', n));
     figure,
     hist(xq);
     %hist(xq/length(xq),100);
-    title(sprintf('Histograma de la senal cuantizada n = %d', n));
+    title(sprintf('Histograma de la señal cuantizada. n = %d', n));
     figure,
     hist(error);
     %hist(error/length(error),100);
-    title(sprintf('Histograma del error n = %d', n));
+    title(sprintf('Histograma del error. n = %d', n));
     Sq=mean(xq.^2);
     Nq=mean(error.^2);
     fprintf('Sq/Nq = %d para n = %d', Sq/Nq, n);

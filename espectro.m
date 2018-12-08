@@ -11,7 +11,7 @@ function [X, f] = espectro(x, Fs)
 %     f=(-L/2:L/2-1)*Fs/L;
     
     %Vía 2
-    X=fftshift(fft(x));
+    X=abs(fftshift(fft(x)))/Fs;
     N=length(X);
     MX=X/N;
     f=-Fs/2:Fs/N:Fs/2-Fs/N;
