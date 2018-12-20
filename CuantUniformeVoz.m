@@ -4,7 +4,7 @@
 %% 
 
 %% Cuantificacion Uniforme de Señal de Voz
-close all
+%close all
 N=[6 4];
 [entrada, fs]=audioread('prueba.wav');
 sound(entrada,fs);
@@ -18,34 +18,48 @@ for i=1:2
         plot(entrada, xq(1:length(entrada)));
         title('Curva caracteristica del cuantificador con n = 4');
     end
-    figure,
-    subplot(2,1,1);
-    plot(t,entrada), hold on;
-    plot(tout,xq,'r'), hold on;
-    plot(tout,error,'g');
-    title(sprintf('Graficas en tiempo n = %d',n)), xlabel('t'), ylabel('y(t)');
+    
+    figure
+    subplot(2,1,1)
+    plot(t,entrada,'m')
+    hold on;
+    plot(tout,xq,'g')
+    plot(tout,error,'b')
+    title(sprintf('Gráficas en el dominio temporal. n = %d',n))
+    xlabel('Tiempo (s)')
+    ylabel('Amplitud')
     legend('Entrada', 'Cuantizada', 'Error');
+    
     fs = 1/(tout(2)-tout(1));
-    [ENTRADA, fe]=espectro(entrada, fs);
-    [XQ, fxq]=espectro(xq, fs);
-    [ERROR, ferr]=espectro(error, fs);
+    [ENTRADA, fe] = espectro(entrada, fs);
+    [XQ, fxq] = espectro(xq, fs);
+    [ERROR, ferr] = espectro(error, fs);
+    
     subplot(2,1,2);
-    plot(fe,ENTRADA), hold on;
-    plot(fxq,XQ, 'r'), hold on;
-    plot(ferr,ERROR, 'g');
-    title(sprintf('Graficas en freuencia n = %d',n)), xlabel('f'), ylabel('Y(f)');
+    plot(fe,ENTRADA,'m')
+    hold on
+    plot(fxq,XQ, 'g')
+    plot(ferr,ERROR, 'b')
+    title(sprintf('Gráficas en el dominio frecuencial. n = %d',n))
+    xlabel('Frecuencia (Hz)')
+    ylabel('Amplitud');
     legend('Entrada', 'Cuantizada', 'Error');
+    
+    figure
+    hist(entrada)
+    title(sprintf('Histograma de la entrada. n = %d', n));
+    
     figure,
-    hist(entrada);
-    title(sprintf('Histograma de la entrada n = %d', n));
-    figure,
-    hist(xq);
-    title(sprintf('Histograma de la senal cuantizada n = %d', n));
-    figure,
+    hist(xq)
+    title(sprintf('Histograma de la señal cuantizada. n = %d', n));
+    
+    figure
     hist(error);
-    title(sprintf('Histograma del error n = %d', n));
+    title(sprintf('Histograma del error. n = %d', n))
+    
     Sq=mean(xq.^2);
     Nq=mean(error.^2);
-    fprintf('Sq/Nq = %d para n = %d', Sq/Nq, n);
-    sound(xq, fs);
+    fprintf('Sq/Nq = %d para n = %d', Sq/Nq, n)
+    
+    sound(xq, fs)
 end

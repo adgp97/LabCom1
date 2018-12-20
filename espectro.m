@@ -3,7 +3,7 @@
 %Yurjelis Briceño 11-11371
 %% 
 
-function [X, f] = espectro(x, Fs)
+function [MX, f] = espectro(x, Fs)
 
     %Vía 1
 %     X=fftshift(fft(x))/length(x);
@@ -11,7 +11,7 @@ function [X, f] = espectro(x, Fs)
 %     f=(-L/2:L/2-1)*Fs/L;
     
     %Vía 2
-    X=abs(fftshift(fft(x)))/Fs;
+    X=abs(fftshift(fft(x)));
     N=length(X);
     MX=X/N;
     f=-Fs/2:Fs/N:Fs/2-Fs/N;
